@@ -1,0 +1,23 @@
+sudo mysql -uroot -p
+
+1. create database pizza_db;
+2. use pizza_db;
+3. create table pizzastations(id VARCHAR(1024),address VARCHAR(1024),categories VARCHAR(1024),city VARCHAR(1024),country VARCHAR(1024),shopidentifier VARCHAR(1024),latitude VARCHAR(1024),longitude VARCHAR(1024),menuPageURL VARCHAR(1024),menus_amountMax VARCHAR(1024),menus_amountMin VARCHAR(1024),menus_currency VARCHAR(1024),menus_dateSeen VARCHAR(1024),menus_description VARCHAR(1024),menus_name VARCHAR(1024),name VARCHAR(1024),postalCode VARCHAR(1024),priceRangeCurrency VARCHAR(1024),priceRangeMin VARCHAR(1024),priceRangeMax VARCHAR(1024),province VARCHAR(1024));
+4. LOAD data infile '/var/lib/mysql-files/pizzashops.csv' into table pizzastations columns terminated by ',' enclosed by '\"' lines terminated by '\n' IGNORE 1 ROWS;
+5. CREATE TABLE region_info SELECT DISTINCT postalCode,priceRangeCurrency from pizzastations;
+6. describe region_info;
+7. ALTER TABLE pizzastations DROP priceRangeCurrency;
+8. CREATE TABLE shopaddress SELECT DISTINCT id,latitude,longitude,city,categories,address,country,shopidentifier,province from pizzastations;
+9. describe shopaddress;
+10. ALTER TABLE pizzastations DROP latitude, DROP longitude;
+11. ALTER TABLE pizzastations DROP city, DROP categories,DROP address,DROP country,DROP shopidentifier, DROP province;
+12. describe pizzastations;
+13. CREATE TABLE location select id,city,province,country from shopaddress;
+14. ALTER TABLE shopaddress DROP province,DROP country;
+15. describe shopaddress;
+16. describe pizzastations;
+17. describe location;
+18. describe region_info;
+
+select name,count(name),sum(priceRangeMax) from pizzastations group by name with ROLLUP;
+
